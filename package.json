@@ -10,7 +10,9 @@
   "dependencies": {
     "@react-native-community/image-editor": "^2.2.0",
     "@react-native-community/image-picker-ios": "^1.0.1",
+    "babel-plugin-wildcard": "^6.0.0",
     "expo": "~36.0.0",
+    "expo-asset": "~8.0.0",
     "expo-constants": "~8.0.0",
     "expo-font": "~8.0.0",
     "expo-image-manipulator": "~8.0.0",

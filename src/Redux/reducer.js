@@ -1,7 +1,9 @@
 import * as types from "./constants";
 const initialState = {
   image: null,
-  pieces: []
+  pieces: [],
+  zIndex: 0,
+  topic: ""
 };
 
 export default function(state = initialState, action) {
@@ -15,7 +17,6 @@ export default function(state = initialState, action) {
     }
     case types.CROP_IMAGE: {
       const pieces = action.payload.pieces;
-      // console.log("Piece:",pieces)
       return {
         ...state,
         pieces: pieces
@@ -23,10 +24,22 @@ export default function(state = initialState, action) {
     }
     case types.IS_CORRECT: {
       const pieces = action.payload.pieces;
-      // console.log("Piece:",pieces)
       return {
         ...state,
         pieces: pieces
+      };
+    }
+    case types.ZINDEX: {
+      return {
+        ...state,
+        zIndex: state.zIndex + 1
+      };
+    }
+    case types.TOPIC: {
+      const topic = action.payload.topic
+      return {
+        ...state,
+        topic: topic
       };
     }
     default: {

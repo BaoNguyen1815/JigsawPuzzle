@@ -4,30 +4,52 @@ import { connect } from "react-redux";
 import { cropImage } from "../Redux/action";
 import CroppedImage from "./CroppedImage";
 import Table from "./Table";
-import SuggestModal from "./SuggestModal";
-
 class Game extends Component {
   constructor(props) {
     super();
-    this.state = {
-      modalVisible: false
-    };
+
   }
-  _setModalVisible = () => {
-    this.setState({ modalVisible: !this.state.modalVisible });
-  };
-
-  componentDidMount() {}
-
   render() {
-    const allImages = this.props.pieces.map((img, index) => (
-      <CroppedImage
-        key={index}
-        correctX={img.x}
-        correctY={img.y}
-        imageUri={img.image.uri}
-      ></CroppedImage>
-    ));
+    const allImages = () => {
+      const arr = [];
+
+      var tmp = 1;
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          const top = 1 * tmp;
+          const bot = 1 * tmp;
+          const left = 1 * tmp;
+          const right = 1 * tmp;
+          if (j == 0) {
+            top = 0;
+          }
+          if (j == 3) {
+            bot = 0;
+          }
+          if (i == 0) {
+            left = 0;
+          }
+          if (i == 3) {
+            right = 0;
+          }
+          tmp = tmp * -1;
+          arr.push(
+            <CroppedImage
+              key={`${i}-${j}`}
+              correctX={i}
+              correctY={j}
+              top={top}
+              bot={bot}
+              left={left}
+              right={right}
+            ></CroppedImage>
+          );
+        }
+        tmp = tmp * -1;
+      }
+      return arr;
+    };
+
     return (
       <ImageBackground
         source={require("../assets/images.jpeg")}
@@ -39,8 +61,7 @@ class Game extends Component {
             flex: 1,
             flexWrap: "wrap",
             alignItems: "center",
-            justifyContent: "center",
-            alignSelf: "center",
+            alignSelf: "center"
           }}
         >
           <View
@@ -52,9 +73,7 @@ class Game extends Component {
           >
             <Table></Table>
           </View>
-          {allImages}
-
-          {/* <SuggestModal modalVisible={this.state.modalVisible}></SuggestModal> */}
+          {allImages()}
         </View>
       </ImageBackground>
     );

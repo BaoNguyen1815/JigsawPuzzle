@@ -2,6 +2,9 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import Index from "./src/Components/Index";
 import Game from "./src/Components/Game";
+import ChooseImage from "./src/Components/ChooseImage";
+import YourCamera from "./src/Components/YourCamera";
+import CollectionImages from "./src/Components/CollectionImages";
 const screens = {
   Home: {
     screen: Index,
@@ -9,10 +12,23 @@ const screens = {
       title: "Jigsaww"
     })
   },
+  ChooseImage: {
+    screen: ChooseImage,
+    navigationOptions: () => ({
+      title: "Jigsaww"
+    })
+  },
+  CollectionPage: {
+    screen: CollectionImages,
+    navigationOptions: () => ({
+      title: "Jigsaww"
+    })
+  },
   Game: {
     screen: Game,
     navigationOptions: () => ({
-      title: "Jigsaww"
+      title: "Jigsaww",
+      gesturesEnabled: false
     })
   }
 };

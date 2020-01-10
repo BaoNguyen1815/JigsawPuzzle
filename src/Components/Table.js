@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
-
-    width: 400,
+    marginTop : 10,
+    width: 404,
     height: 404,
     position: "relative",
     borderRadius: 0,
@@ -21,8 +21,16 @@ const styles = StyleSheet.create({
     borderColor: "black"
   }
 });
+
 export default class Table extends Component {
+
   render() {
-    return <View style={styles.container}></View>;
+    return (
+      <View
+        //
+        style={styles.container}
+      ></View>
+    );
   }
+
 }

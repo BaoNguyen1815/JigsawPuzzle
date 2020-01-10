@@ -26,3 +26,18 @@ export const isCorrect = pieces => {
     }
   };
 };
+
+export const ZIndexIncrease = () => {
+  return {
+    type : types.ZINDEX,
+
+  }
+};
+export const chooseTopic = topic => {
+  return {
+    type : types.TOPIC,
+    payload:{
+      topic : topic
+    }
+  }
+}
