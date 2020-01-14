@@ -5,17 +5,14 @@ import { cropImage } from "../Redux/action";
 import CroppedImage from "./CroppedImage";
 import Table from "./Table";
 class Game extends Component {
-  constructor(props) {
-    super();
-
-  }
   render() {
     const allImages = () => {
       const arr = [];
 
       var tmp = 1;
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
+      for (let i = 0; i < 4*this.props.level; i++) {
+        for (let j = 0; j < 4*this.props.level; j++) {
+          const length = 4*this.props.length-1;
           const top = 1 * tmp;
           const bot = 1 * tmp;
           const left = 1 * tmp;
@@ -23,13 +20,13 @@ class Game extends Component {
           if (j == 0) {
             top = 0;
           }
-          if (j == 3) {
+          if (j == length) {
             bot = 0;
           }
           if (i == 0) {
             left = 0;
           }
-          if (i == 3) {
+          if (i == length) {
             right = 0;
           }
           tmp = tmp * -1;
@@ -83,7 +80,8 @@ class Game extends Component {
 const mapStateToProps = state => {
   return {
     image: state.image,
-    pieces: state.pieces
+    pieces: state.pieces,
+    level: state.level
   };
 };
 

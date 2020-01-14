@@ -29,15 +29,22 @@ export const isCorrect = pieces => {
 
 export const ZIndexIncrease = () => {
   return {
-    type : types.ZINDEX,
-
-  }
+    type: types.ZINDEX
+  };
 };
 export const chooseTopic = topic => {
   return {
-    type : types.TOPIC,
-    payload:{
-      topic : topic
+    type: types.TOPIC,
+    payload: {
+      topic: topic
     }
-  }
-}
+  };
+};
+export const chooseLevel = level => {
+  return {
+    type : types.LEVEL,
+    payload: {
+      level: level
+    }
+  };
+};

@@ -1,19 +1,23 @@
 import React, { Component } from "react";
-import {
-  View,
-  ImageBackground,
-  Text,
-  StyleSheet
-} from "react-native";
-import Constanxts from "expo-constants";
+import { View, ImageBackground, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
-import animalImg from "../assets/Cat-01.png";
 import CollectionImages from "./CollectionImages";
-export default class CollectionPage extends Component {
-  constructor(props) {
-    super();
-  }
+import animalImages from "../assets/Animal/index";
+import cityImages from "../assets/City/index";
+import paintedImages from "../assets/Painted/index";
+
+class CollectionPage extends Component {
   render() {
+    const AllImage = () => {
+      return Object.keys(images[this.props.topic]).map((key, index) => (
+        <CollectionImages
+          navigation={this.props.navigation}
+          source={images[this.props.topic][key]}
+          key={key}
+        ></CollectionImages>
+      ));
+    };
+
     return (
       <ImageBackground
         source={require("../assets/background.jpg")}
@@ -21,24 +25,28 @@ export default class CollectionPage extends Component {
         imageStyle={{ opacity: 0.3 }}
       >
         <View style={styles.col}>
-          <View style={styles.row}>
-            <CollectionImages></CollectionImages>
-          </View>
-          <View style={styles.row}>
-            <CollectionImages></CollectionImages>
-          </View>
-          <View style={styles.row}></View>
+          <AllImage></AllImage>
         </View>
       </ImageBackground>
     );
   }
 }
+//TODO :style
+
+const images = {
+  animalImages: animalImages,
+  cityImages: cityImages,
+  paintedImages: paintedImages
+};
 
 const styles = StyleSheet.create({
   col: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-around"
+    alignContent: "center",
+    marginTop: 150,
+    marginBottom: 100,
+    alignItems: "center",
+    justifyContent: "center"
   },
   row: {
     flexWrap: "wrap",
@@ -46,3 +54,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around"
   }
 });
+const MapStateToProps = state => {
+  return {
+    topic: state.topic
+  };
+};
+export default connect(MapStateToProps)(CollectionPage);

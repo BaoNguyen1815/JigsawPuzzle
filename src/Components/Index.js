@@ -1,23 +1,10 @@
 import React, { Component } from "react";
-import {
-  View,
-  Button,
-  Image,
-  ImageBackground,
-  Text,
-  ScrollView,
-  StyleSheet
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
+import { View, ImageBackground, StyleSheet } from "react-native";
 import { pickImage, cropImage } from "../Redux/action";
 import { connect } from "react-redux";
-import YourCamera from "./YourCamera"
-import * as types from "../Redux/constants";
-import * as Permissions from "expo-permissions";
-import * as ImageManipulator from "expo-image-manipulator";
+import YourCamera from "./YourCamera";
 import Collection from "./Collection";
-import animalImg from "../assets/Cat-01.png"
+import animalImg from "../assets/Cat-01.png";
 
 class Index extends Component {
   constructor(props) {
@@ -25,7 +12,6 @@ class Index extends Component {
     this.arr = [];
   }
   render() {
-
     return (
       <ImageBackground
         source={require("../assets/background.jpg")}
@@ -34,17 +20,26 @@ class Index extends Component {
       >
         <View style={styles.col}>
           <View style={styles.row}>
-            <YourCamera navigation = {this.props.navigation}></YourCamera>
+            <YourCamera navigation={this.props.navigation}></YourCamera>
             <Collection
-            navigation = {this.props.navigation}
-            link = {animalImg}
-            topic = {"Animal"}
+              navigation={this.props.navigation}
+              link={animalImg}
+              topic={"animalImages"}
             ></Collection>
           </View>
           <View style={styles.row}>
+            <Collection
+              navigation={this.props.navigation}
+              link={require("../assets/city.png")}
+              topic={"cityImages"}
+            ></Collection>
+            <Collection
+              navigation={this.props.navigation}
+              link={require("../assets/Art-01.png")}
+              topic={"paintedImages"}
+            ></Collection>
           </View>
-          <View style={styles.row}>
-          </View>
+          <View style={styles.row}></View>
         </View>
       </ImageBackground>
     );

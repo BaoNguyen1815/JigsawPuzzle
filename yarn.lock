@@ -1388,6 +1388,11 @@ babel-plugin-react-native-web@^0.11.7:
   resolved "https://registry.yarnpkg.com/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.11.7.tgz#15b578c0731bd7d65d334f9c759d95e8e4a602e2"
   integrity sha512-CxE7uhhqkzAFkwV2X7+Mc/UVPujQQDtja/EGxCXRJvdYRi72QTmaJYKbK1lV9qgTZuB+TDguU89coaA9Z1BNbg==
 
+babel-plugin-require-all@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-require-all/-/babel-plugin-require-all-0.0.1.tgz#a064d868951109a41936bf3f2c349d6f984f587a"
+  integrity sha1-oGTYaJURCaQZNr8/LDSdb5hPWHo=
+
 babel-plugin-syntax-trailing-function-commas@^7.0.0-beta.0:
   version "7.0.0-beta.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-trailing-function-commas/-/babel-plugin-syntax-trailing-function-commas-7.0.0-beta.0.tgz#aa213c1435e2bffeb6fca842287ef534ad05d5cf"
@@ -2555,6 +2560,11 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
+
+fs@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+  integrity sha1-invTcYa23d84E/I4WLV+yq9eQdQ=
 
 fsevents@^1.2.7:
   version "1.2.11"
@@ -4224,6 +4234,18 @@ react-native-gesture-handler@^1.5.2:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
+
+react-native-horizontal-picker@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-horizontal-picker/-/react-native-horizontal-picker-0.0.1.tgz#0772216dd6b1f83226f63e68fcef462cf20c2fc8"
+  integrity sha1-B3Ihbdax+DIm9j5o/O9GLPIML8g=
+  dependencies:
+    lodash "^4.17.4"
+
+react-native-hpicker@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-hpicker/-/react-native-hpicker-1.0.5.tgz#05df272f4c5dad263a24bfb638b83d2c18407b50"
+  integrity sha1-Bd8nL0xdrSY6JL+2OLg9LBhAe1A=
 
 react-native-image-picker@^1.1.0:
   version "1.1.0"

@@ -3,7 +3,8 @@ const initialState = {
   image: null,
   pieces: [],
   zIndex: 0,
-  topic: ""
+  topic: "",
+  level: 4
 };
 
 export default function(state = initialState, action) {
@@ -36,10 +37,17 @@ export default function(state = initialState, action) {
       };
     }
     case types.TOPIC: {
-      const topic = action.payload.topic
+      const topic = action.payload.topic;
       return {
         ...state,
         topic: topic
+      };
+    }
+    case types.LEVEL: {
+      const level = action.payload.level;
+      return {
+        ...state,
+        level: level
       };
     }
     default: {

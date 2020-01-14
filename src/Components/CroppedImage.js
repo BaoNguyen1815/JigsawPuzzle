@@ -82,34 +82,35 @@ class CroppedImage extends Component {
   _onPanResponderRelease = (event, gestureState) => {
     this.top += gestureState.dy;
     this.left += gestureState.dx;
-    let leftX = 1 + 100 * this.props.correctX - 29;
-    let topY = 11 + 100 * this.props.correctY - 29;
+    let leftX = 1 + (100 * this.props.correctX - 29) / this.props.level;
+    let topY = 11 + (100 * this.props.correctY - 29) / this.props.level;
+    const e = 30 / this.props.level;
     if (
-      this.customStyle.style.top < topY + 30 &&
+      this.customStyle.style.top < topY + e &&
       this.customStyle.style.top > topY &&
       this.customStyle.style.left > leftX &&
-      this.customStyle.style.left < leftX + 30
+      this.customStyle.style.left < leftX + e
     ) {
       this._isCorrect(leftX, topY);
     } else if (
       this.customStyle.style.top < topY &&
-      this.customStyle.style.top > topY - 30 &&
+      this.customStyle.style.top > topY - e &&
       this.customStyle.style.left > leftX &&
-      this.customStyle.style.left < leftX - 30
+      this.customStyle.style.left < leftX - e
     ) {
       this._isCorrect(leftX, topY);
     } else if (
-      this.customStyle.style.top < topY + 30 &&
+      this.customStyle.style.top < topY + e &&
       this.customStyle.style.top > topY &&
-      this.customStyle.style.left > leftX - 30 &&
+      this.customStyle.style.left > leftX - e &&
       this.customStyle.style.left < leftX
     ) {
       this._isCorrect(leftX, topY);
     } else if (
       this.customStyle.style.top < topY &&
-      this.customStyle.style.top > topY - 30 &&
+      this.customStyle.style.top > topY - e &&
       this.customStyle.style.left > leftX &&
-      this.customStyle.style.left < leftX + 30
+      this.customStyle.style.left < leftX + e
     ) {
       this._isCorrect(leftX, topY);
     } else {
@@ -126,6 +127,7 @@ class CroppedImage extends Component {
   };
 
   render() {
+    const parameter = 160/this.props.level;
     const X = 0;
     const Y = 0;
     const t = this.props.top;
@@ -135,8 +137,8 @@ class CroppedImage extends Component {
     return (
       <View
         style={{
-          width: 160,
-          height: 160,
+          width: parameter,
+          height: parameter,
           position: "absolute",
           overflow: "hidden"
         }}
@@ -145,17 +147,21 @@ class CroppedImage extends Component {
       >
         <Svg
           style={{
-            width: 160,
-            height: 160
+            width: parameter,
+            height: parameter
           }}
           {...this.pansResponder.panHandlers}
           ref={view => (this.view = view)}
           position="absolute"
-          viewBox="-29 -29 160 160"
+          viewBox={`${-29 / this.props.level} ${-29 / this.props.level} ${160 /
+            this.props.level} ${parameter}`}
         >
           <Defs>
             <ClipPath id="clip">
               <Path
+                transform={{
+                  scale: `${1 / this.props.level},${1 / this.props.level}`
+                }}
                 stroke="red"
                 strokeOpacity={0}
                 strokeWidth={3}
@@ -180,10 +186,10 @@ class CroppedImage extends Component {
             </ClipPath>
           </Defs>
           <Image
-            x={0 - 100 * this.props.correctX}
-            y={-0 - 100 * this.props.correctY}
-            width="400"
-            height="400"
+            x={0 - 100 * this.props.correctX/this.props.level}
+            y={-0 - 100 * this.props.correctY/this.props.level}
+            width={400}
+            height={400}
             href={this.props.image}
             clipPath="url(#clip)"
           ></Image>
@@ -191,6 +197,9 @@ class CroppedImage extends Component {
             stroke="grey"
             fill="none"
             strokeWidth={0.5}
+            transform={{
+              scale: `${1 / this.props.level},${1 / this.props.level}`
+            }}
             d={`M${X} ${Y} L${X + 40} ${Y} C${X - 15 + 40} ${Y - 29 * t}, ${X +
               15 +
               60} ${Y - 29 * t}, ${X + 60} ${Y}, L${X + 100} ${Y} L${X +
@@ -216,7 +225,8 @@ const mapStateToProps = state => {
   return {
     image: state.image,
     pieces: state.pieces,
-    zIndex: state.zIndex
+    zIndex: state.zIndex,
+    level: state.level
   };
 };
 

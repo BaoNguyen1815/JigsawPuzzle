@@ -1,16 +1,12 @@
 import React, { Component } from "react";
-import { View, Button, Image, StyleSheet } from "react-native";
-import {
-  TouchableOpacity,
-  TouchableHighlight
-} from "react-native-gesture-handler";
+import { View, Image } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { pickImage, cropImage } from "../Redux/action";
 import { connect } from "react-redux";
 import * as Permissions from "expo-permissions";
 class YourCamera extends Component {
-
   render() {
     return (
       <TouchableOpacity onPress={this._pickImage}>
@@ -30,7 +26,6 @@ class YourCamera extends Component {
             style={{ width: 140, height: 140, resizeMode: "stretch" }}
             source={require("../assets/Camera-05.png")}
           ></Image>
-
         </View>
       </TouchableOpacity>
     );
@@ -58,7 +53,7 @@ class YourCamera extends Component {
     });
 
     if (!result.cancelled) {
-      this.props.pickImage(result);
+      this.props.pickImage(result.uri);
     }
     this.props.navigation.navigate("ChooseImage");
   };

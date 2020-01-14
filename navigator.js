@@ -5,6 +5,7 @@ import Game from "./src/Components/Game";
 import ChooseImage from "./src/Components/ChooseImage";
 import YourCamera from "./src/Components/YourCamera";
 import CollectionImages from "./src/Components/CollectionImages";
+import CollectionPage from './src/Components/CollectionPage'
 const screens = {
   Home: {
     screen: Index,
@@ -19,7 +20,7 @@ const screens = {
     })
   },
   CollectionPage: {
-    screen: CollectionImages,
+    screen: CollectionPage,
     navigationOptions: () => ({
       title: "Jigsaww"
     })
