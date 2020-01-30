@@ -2,9 +2,12 @@ import * as types from "./constants";
 const initialState = {
   image: null,
   pieces: [],
-  zIndex: 0,
+  zIndex: 1,
   topic: "",
-  level: 4
+  level: 2,
+  piecesAtTable: [],
+  panresponder: true,
+  scrollEnabled: true,
 };
 
 export default function(state = initialState, action) {
@@ -24,10 +27,10 @@ export default function(state = initialState, action) {
       };
     }
     case types.IS_CORRECT: {
-      const pieces = action.payload.pieces;
+      const piecesAtTable = action.payload.pieces;
       return {
         ...state,
-        pieces: pieces
+        piecesAtTable: piecesAtTable
       };
     }
     case types.ZINDEX: {
@@ -49,6 +52,34 @@ export default function(state = initialState, action) {
         ...state,
         level: level
       };
+    }
+    case types.REMOVE_A_PIECE: {
+      const index = action.payload.index;
+      const obj = {
+        piece: state.pieces[index],
+        x0: action.payload.x0,
+        y0: action.payload.y0
+      };
+      return {
+        ...state,
+        piecesAtTable: [...state.piecesAtTable, obj],
+        pieces: [
+          ...state.pieces.slice(0, index),
+          ...state.pieces.slice(index + 1)
+        ]
+      };
+    }
+    case types.ON_PANRESPONDER_SHOULD_MOVE: {
+      return {
+        ...state,
+        panresponder: !state.panresponder
+      };
+    }
+    case types.SCROLL_ENABLED :{
+      return {
+        ...state,
+        scrollEnabled : !state.scrollEnabled
+      }
     }
     default: {
       return state;

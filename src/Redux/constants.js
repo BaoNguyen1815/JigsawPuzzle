@@ -4,3 +4,7 @@ export const IS_CORRECT = "IS_CORRECT";
 export const ZINDEX = "ZINDEX++";
 export const TOPIC = "TOPIC";
 export const LEVEL = "LEVEL";
+export const REMOVE_A_PIECE = "REMOVE_A_PIECE_FROM_LIST";
+export const PUSH_A_PIECE_INTO_TABLE = "PUSH_A_PIECE_INTO_TABLE";
+export const ON_PANRESPONDER_SHOULD_MOVE = "ON_PANRESPONDER_SHOULD_MOVE";
+export const SCROLL_ENABLED = "SCROLL_ENABLED";

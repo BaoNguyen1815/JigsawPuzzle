@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Button, Image, Picker } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
-import { pickImage, cropImage, chooseLevel } from "../Redux/action";
+import { pickImage, cropImage, chooseLevel,isCorrect } from "../Redux/action";
 import { connect } from "react-redux";
 class ChooseImage extends Component {
   constructor(props) {
@@ -25,15 +25,39 @@ class ChooseImage extends Component {
       }
     );
     if (croppedImageURI) {
-      for (let i = 0; i < 4*this.props.level; i++) {
-        for (let j = 0; j < 4*this.props.level; j++) {
-          const obj = {
-            x: i,
-            y: j,
-            isCorrect: false
-          };
-          arr.push(obj);
+      let tmp = 1;
+      for (let i = 0; i < 4 * this.props.level; i++) {
+        for (let j = 0; j < 4 * this.props.level; j++) {
+          const length = 4 * this.props.level - 1;
+          const top = 1 * tmp;
+          const bot = 1 * tmp;
+          const left = 1 * tmp;
+          const right = 1 * tmp;
+          if (j == 0) {
+            top = 0;
+          }
+          if (j == length) {
+            bot = 0;
+          }
+          if (i == 0) {
+            left = 0;
+          }
+          if (i == length) {
+            right = 0;
+          }
+          tmp = tmp * -1;
+          arr.push({
+            key: `${i}-${j}`,
+            correctX: i,
+            correctY: j,
+            top: top,
+            bot: bot,
+            left: left,
+            right: right,
+            isCorrect : false,
+          });
         }
+        tmp = tmp * -1;
       }
       this.props.cropImage(arr);
       this.props.pickImage(croppedImageURI.uri);
@@ -69,6 +93,7 @@ class ChooseImage extends Component {
             title="Let's start"
             onPress={() => {
               this._crop();
+              this.props.isCorrect([])
               this.props.navigation.navigate("Game");
             }}
           ></Button>
@@ -84,6 +109,6 @@ const mapStateToProps = state => {
     level: state.level
   };
 };
-export default connect(mapStateToProps, { pickImage, cropImage, chooseLevel })(
+export default connect(mapStateToProps, { pickImage, cropImage, chooseLevel,isCorrect })(
   ChooseImage
 );

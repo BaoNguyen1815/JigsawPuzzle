@@ -42,9 +42,29 @@ export const chooseTopic = topic => {
 };
 export const chooseLevel = level => {
   return {
-    type : types.LEVEL,
+    type: types.LEVEL,
     payload: {
       level: level
     }
+  };
+};
+export const removeImage = (index, x0, y0) => {
+  return {
+    type: types.REMOVE_A_PIECE,
+    payload: {
+      index: index,
+      x0: x0,
+      y0: y0
+    }
+  };
+};
+export const panResponder = () => {
+  return {
+    type: types.ON_PANRESPONDER_SHOULD_MOVE
+  };
+};
+export const scrollEnabled = () => {
+  return {
+    type: types.SCROLL_ENABLED
   };
 };

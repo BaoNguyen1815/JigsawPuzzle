@@ -1,59 +1,43 @@
 import React, { Component } from "react";
-import { View, Text, Image, Modal, ImageBackground } from "react-native";
+import { View, ImageBackground, PanResponder, StatusBar } from "react-native";
 import { connect } from "react-redux";
 import { cropImage } from "../Redux/action";
 import CroppedImage from "./CroppedImage";
 import Table from "./Table";
+import PieceList from "./PieceList";
+import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
+
 class Game extends Component {
   render() {
-    const allImages = () => {
-      const arr = [];
-
-      var tmp = 1;
-      for (let i = 0; i < 4*this.props.level; i++) {
-        for (let j = 0; j < 4*this.props.level; j++) {
-          const length = 4*this.props.length-1;
-          const top = 1 * tmp;
-          const bot = 1 * tmp;
-          const left = 1 * tmp;
-          const right = 1 * tmp;
-          if (j == 0) {
-            top = 0;
-          }
-          if (j == length) {
-            bot = 0;
-          }
-          if (i == 0) {
-            left = 0;
-          }
-          if (i == length) {
-            right = 0;
-          }
-          tmp = tmp * -1;
-          arr.push(
-            <CroppedImage
-              key={`${i}-${j}`}
-              correctX={i}
-              correctY={j}
-              top={top}
-              bot={bot}
-              left={left}
-              right={right}
-            ></CroppedImage>
-          );
-        }
-        tmp = tmp * -1;
-      }
-      return arr;
-    };
-
+    const allImages = this.props.piecesAtTable.map((item, index) => (
+      <CroppedImage
+        key={index}
+        x0={item.x0}
+        y0={item.y0}
+        correctX={item.piece.correctX}
+        correctY={item.piece.correctY}
+        top={item.piece.top}
+        bot={item.piece.bot}
+        left={item.piece.left}
+        right={item.piece.right}
+      ></CroppedImage>
+    ));
     return (
       <ImageBackground
         source={require("../assets/images.jpeg")}
         style={{ width: "100%", height: "100%" }}
         imageStyle={{ opacity: 0.3 }}
       >
-        <View
+        <ReactNativeZoomableView
+          maxZoom={1.5}
+          minZoom={0.5}
+          zoomStep={1}
+          initialZoom={1}
+          bindToBorders={true}
+          onMoveShouldSetPanResponder={(evt, gesture) =>
+            this.props.panresponder
+          }
+
           style={{
             flex: 1,
             flexWrap: "wrap",
@@ -62,15 +46,25 @@ class Game extends Component {
           }}
         >
           <View
+            // onZoomAfter={this.logOutZoomState}
             style={{
-              alignItems: "center",
+              zIndex: 0,
               alignContent: "center",
               position: "relative"
             }}
           >
             <Table></Table>
+            {allImages}
           </View>
-          {allImages()}
+        </ReactNativeZoomableView>
+        <View
+          style={{
+            position: "relative",
+            borderWidth: 1,
+            backgroundColor: "white"
+          }}
+        >
+          <PieceList></PieceList>
         </View>
       </ImageBackground>
     );
@@ -81,7 +75,9 @@ const mapStateToProps = state => {
   return {
     image: state.image,
     pieces: state.pieces,
-    level: state.level
+    piecesAtTable: state.piecesAtTable,
+    level: state.level,
+    panresponder: state.panresponder
   };
 };
 

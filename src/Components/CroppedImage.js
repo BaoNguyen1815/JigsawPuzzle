@@ -1,36 +1,25 @@
 import React, { Component } from "react";
 import { View, PanResponder } from "react-native";
 import { connect } from "react-redux";
-import { isCorrect, ZIndexIncrease } from "../Redux/action";
-import {
-  ClipPath,
-  G,
-  Polygon,
-  Text,
-  Svg,
-  Defs,
-  Stop,
-  Use,
-  Mask,
-  Path,
-  Image
-} from "react-native-svg";
+import { isCorrect, ZIndexIncrease, panResponder } from "../Redux/action";
+import { ClipPath, Svg, Defs, Path, Image } from "react-native-svg";
 class CroppedImage extends Component {
   constructor(props) {
     super();
     this.view = null;
-
     this.customStyle = {
       style: {
-        top: 400 + Math.random() * 100,
-        left: Math.random() * 290,
-        zIndex: 0
+        top: props.y0,
+        left: props.x0,
+        zIndex: 1
       }
     };
     this.top = this.customStyle.style.top;
     this.left = this.customStyle.style.left;
 
     this.pansResponder = PanResponder.create({
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
       onPanResponderGrant: this._onPanResponderGrant.bind(this),
       onStartShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (event, gestureState) => true,
@@ -49,19 +38,25 @@ class CroppedImage extends Component {
   _isCorrect = (leftX, topY) => {
     this.customStyle.style.left = leftX;
     this.customStyle.style.top = topY;
-    let arr = this.props.pieces;
+    let arr = this.props.piecesAtTable;
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i].x == this.props.correctX && arr[i].y == this.props.correctY) {
-        arr[i].isCorrect = true;
+      if (
+        arr[i].piece.correctX == this.props.correctX &&
+        arr[i].piece.correctY == this.props.correctY
+      ) {
+        arr[i].piece.isCorrect = true;
       }
     }
     this.props.isCorrect(arr);
   };
   _isNotCorrect = () => {
-    let arr = this.props.pieces;
+    let arr = this.props.piecesAtTable;
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i].x == this.props.correctX && arr[i].y == this.props.correctY) {
-        arr[i].isCorrect = false;
+      if (
+        arr[i].piece.correctX == this.props.correctX &&
+        arr[i].piece.correctY == this.props.correctY
+      ) {
+        arr[i].piece.isCorrect = false;
       }
     }
     this.props.isCorrect(arr);
@@ -69,17 +64,19 @@ class CroppedImage extends Component {
 
   _isWinning = () => {
     let wincheck = 0;
-    this.props.pieces.forEach(piece =>
-      piece.isCorrect ? wincheck++ : wincheck
+    this.props.piecesAtTable.forEach(piece =>
+      piece.piece.isCorrect ? wincheck++ : wincheck
     );
     if (wincheck == 16) alert("Winning");
   };
   _onPanResponderGrant = (event, gestureState) => {
+    this.props.panResponder();
     this.props.ZIndexIncrease();
     this.customStyle.style.zIndex = this.props.zIndex;
     this.updateNativeProps();
   };
   _onPanResponderRelease = (event, gestureState) => {
+    this.props.panResponder();
     this.top += gestureState.dy;
     this.left += gestureState.dx;
     let leftX = 1 + (100 * this.props.correctX - 29) / this.props.level;
@@ -122,12 +119,11 @@ class CroppedImage extends Component {
   _onPanResponderMove = (event, gestureState) => {
     this.customStyle.style.top = this.top + gestureState.dy;
     this.customStyle.style.left = this.left + gestureState.dx;
-
     this.updateNativeProps();
   };
 
   render() {
-    const parameter = 160/this.props.level;
+    const parameter = 160 / this.props.level;
     const X = 0;
     const Y = 0;
     const t = this.props.top;
@@ -136,22 +132,21 @@ class CroppedImage extends Component {
     const r = this.props.right;
     return (
       <View
+        {...this.pansResponder.panHandlers}
+        ref={view => (this.view = view)}
         style={{
           width: parameter,
           height: parameter,
           position: "absolute",
-          overflow: "hidden"
+          overflow: "hidden",
+          flex: 1
         }}
-        {...this.pansResponder.panHandlers}
-        ref={view => (this.view = view)}
       >
         <Svg
           style={{
             width: parameter,
             height: parameter
           }}
-          {...this.pansResponder.panHandlers}
-          ref={view => (this.view = view)}
           position="absolute"
           viewBox={`${-29 / this.props.level} ${-29 / this.props.level} ${160 /
             this.props.level} ${parameter}`}
@@ -186,8 +181,8 @@ class CroppedImage extends Component {
             </ClipPath>
           </Defs>
           <Image
-            x={0 - 100 * this.props.correctX/this.props.level}
-            y={-0 - 100 * this.props.correctY/this.props.level}
+            x={0 - (100 * this.props.correctX) / this.props.level}
+            y={-0 - (100 * this.props.correctY) / this.props.level}
             width={400}
             height={400}
             href={this.props.image}
@@ -225,12 +220,15 @@ const mapStateToProps = state => {
   return {
     image: state.image,
     pieces: state.pieces,
+    piecesAtTable: state.piecesAtTable,
     zIndex: state.zIndex,
     level: state.level
   };
 };
 
-export default connect(mapStateToProps, { isCorrect, ZIndexIncrease })(
-  CroppedImage
-);
+export default connect(mapStateToProps, {
+  isCorrect,
+  ZIndexIncrease,
+  panResponder
+})(CroppedImage);
 //Increase zIndex
