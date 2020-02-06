@@ -8,6 +8,7 @@ const initialState = {
   piecesAtTable: [],
   panresponder: true,
   scrollEnabled: true,
+  zoomLevel : 1
 };
 
 export default function(state = initialState, action) {
@@ -79,6 +80,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         scrollEnabled : !state.scrollEnabled
+      }
+    }
+    case types.ZOOM_LEVEL: {
+      return {
+        ...state,
+        zoomLevel : action.payload.zoomLevel
       }
     }
     default: {

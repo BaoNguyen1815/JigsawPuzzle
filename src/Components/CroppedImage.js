@@ -14,71 +14,26 @@ class CroppedImage extends Component {
         zIndex: 1
       }
     };
+    this.onMoveShouldSetPanResponder = true;
     this.top = this.customStyle.style.top;
     this.left = this.customStyle.style.left;
 
     this.pansResponder = PanResponder.create({
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => this.onMoveShouldSetPanResponder,
+      onStartShouldSetPanResponder: (evt, gestureState) => this.onMoveShouldSetPanResponder,
+      onMoveShouldSetPanResponder: (event, gestureState) => this.onMoveShouldSetPanResponder,
       onPanResponderGrant: this._onPanResponderGrant.bind(this),
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (event, gestureState) => true,
       onPanResponderMove: this._onPanResponderMove.bind(this),
       onPanResponderRelease: this._onPanResponderRelease.bind(this)
     });
   }
 
   componentDidMount() {
+    this.checkCorrect();
     this.view && this.view.setNativeProps(this.customStyle);
   }
 
-  updateNativeProps() {
-    this.view && this.view.setNativeProps(this.customStyle);
-  }
-  _isCorrect = (leftX, topY) => {
-    this.customStyle.style.left = leftX;
-    this.customStyle.style.top = topY;
-    let arr = this.props.piecesAtTable;
-    for (let i = 0; i < arr.length; i++) {
-      if (
-        arr[i].piece.correctX == this.props.correctX &&
-        arr[i].piece.correctY == this.props.correctY
-      ) {
-        arr[i].piece.isCorrect = true;
-      }
-    }
-    this.props.isCorrect(arr);
-  };
-  _isNotCorrect = () => {
-    let arr = this.props.piecesAtTable;
-    for (let i = 0; i < arr.length; i++) {
-      if (
-        arr[i].piece.correctX == this.props.correctX &&
-        arr[i].piece.correctY == this.props.correctY
-      ) {
-        arr[i].piece.isCorrect = false;
-      }
-    }
-    this.props.isCorrect(arr);
-  };
-
-  _isWinning = () => {
-    let wincheck = 0;
-    this.props.piecesAtTable.forEach(piece =>
-      piece.piece.isCorrect ? wincheck++ : wincheck
-    );
-    if (wincheck == 16) alert("Winning");
-  };
-  _onPanResponderGrant = (event, gestureState) => {
-    this.props.panResponder();
-    this.props.ZIndexIncrease();
-    this.customStyle.style.zIndex = this.props.zIndex;
-    this.updateNativeProps();
-  };
-  _onPanResponderRelease = (event, gestureState) => {
-    this.props.panResponder();
-    this.top += gestureState.dy;
-    this.left += gestureState.dx;
+  checkCorrect = () => {
     let leftX = 1 + (100 * this.props.correctX - 29) / this.props.level;
     let topY = 11 + (100 * this.props.correctY - 29) / this.props.level;
     const e = 30 / this.props.level;
@@ -113,12 +68,64 @@ class CroppedImage extends Component {
     } else {
       this._isNotCorrect();
     }
+  };
+
+  updateNativeProps() {
+    this.view && this.view.setNativeProps(this.customStyle);
+  }
+  _isCorrect = (leftX, topY) => {
+    this.customStyle.style.left = leftX;
+    this.customStyle.style.top = topY;
+    let arr = this.props.piecesAtTable;
+    for (let i = 0; i < arr.length; i++) {
+      if (
+        arr[i].piece.correctX == this.props.correctX &&
+        arr[i].piece.correctY == this.props.correctY
+      ) {
+        arr[i].piece.isCorrect = true;
+      }
+    }
+    this.props.isCorrect(arr);
+    this.customStyle.style.zIndex = 1;
+    this.onMoveShouldSetPanResponder = false;
+  };
+  _isNotCorrect = () => {
+    let arr = this.props.piecesAtTable;
+    for (let i = 0; i < arr.length; i++) {
+      if (
+        arr[i].piece.correctX == this.props.correctX &&
+        arr[i].piece.correctY == this.props.correctY
+      ) {
+        arr[i].piece.isCorrect = false;
+      }
+    }
+    this.props.isCorrect(arr);
+  };
+
+  _isWinning = () => {
+    let wincheck = 0;
+    this.props.piecesAtTable.forEach(piece =>
+      piece.piece.isCorrect ? wincheck++ : wincheck
+    );
+    if (wincheck == 16*this.props.level*this.props.level) alert("Winning");
+  };
+  _onPanResponderGrant = (event, gestureState) => {
+    this.props.panResponder();
+    this.props.ZIndexIncrease();
+    this.customStyle.style.zIndex = this.props.zIndex;
+    this.updateNativeProps();
+  };
+  _onPanResponderRelease = (event, gestureState) => {
+    this.props.panResponder();
+    this.top += gestureState.dy;
+    this.left += gestureState.dx;
+    this.checkCorrect();
     this.updateNativeProps();
     this._isWinning();
   };
   _onPanResponderMove = (event, gestureState) => {
-    this.customStyle.style.top = this.top + gestureState.dy;
-    this.customStyle.style.left = this.left + gestureState.dx;
+    this.customStyle.style.top = this.top + gestureState.dy/this.props.zoomLevel;
+    this.customStyle.style.left = this.left + gestureState.dx/this.props.zoomLevel;
     this.updateNativeProps();
   };
 
@@ -222,7 +229,8 @@ const mapStateToProps = state => {
     pieces: state.pieces,
     piecesAtTable: state.piecesAtTable,
     zIndex: state.zIndex,
-    level: state.level
+    level: state.level,
+    zoomLevel : state.zoomLevel
   };
 };
 

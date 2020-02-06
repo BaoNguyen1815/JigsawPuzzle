@@ -1,13 +1,25 @@
 import React, { Component } from "react";
-import { View, ImageBackground, PanResponder, StatusBar } from "react-native";
+import {
+  View,
+  ImageBackground,
+  PanResponder,
+  StatusBar,
+  TouchableWithoutFeedback,
+  Modal,
+  Button,
+  Image
+} from "react-native";
 import { connect } from "react-redux";
-import { cropImage } from "../Redux/action";
+import { cropImage,zoomLevel } from "../Redux/action";
 import CroppedImage from "./CroppedImage";
 import Table from "./Table";
 import PieceList from "./PieceList";
 import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 
 class Game extends Component {
+  state = {
+    showModal: false
+  };
   render() {
     const allImages = this.props.piecesAtTable.map((item, index) => (
       <CroppedImage
@@ -29,6 +41,13 @@ class Game extends Component {
         imageStyle={{ opacity: 0.3 }}
       >
         <ReactNativeZoomableView
+          onZoomAfter={(event, gesture, zoomEventObject) => {
+            this.props.zoomLevel(zoomEventObject.zoomLevel)
+          }}
+          onDoubleTapAfter={(event, gesture, zoomEventObject) => {
+            this.props.zoomLevel(zoomEventObject.zoomLevel)
+          }}
+
           maxZoom={1.5}
           minZoom={0.5}
           zoomStep={1}
@@ -37,7 +56,6 @@ class Game extends Component {
           onMoveShouldSetPanResponder={(evt, gesture) =>
             this.props.panresponder
           }
-
           style={{
             flex: 1,
             flexWrap: "wrap",
@@ -45,17 +63,40 @@ class Game extends Component {
             alignSelf: "center"
           }}
         >
-          <View
-            // onZoomAfter={this.logOutZoomState}
-            style={{
-              zIndex: 0,
-              alignContent: "center",
-              position: "relative"
+          <TouchableWithoutFeedback
+            onLongPress={() => {
+              this.setState({ showModal: true });
             }}
           >
-            <Table></Table>
-            {allImages}
-          </View>
+            <View
+              style={{
+                zIndex: 0,
+                alignContent: "center",
+                position: "relative"
+              }}
+            >
+              <Table></Table>
+              {allImages}
+              <Modal
+                visible={this.state.showModal}
+                transparent={true}
+                animationType={"fade"}
+              >
+                <View style={{ position: "relative", top: 162 }}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      this.setState({ showModal: false });
+                    }}
+                  >
+                    <Image
+                      source={{ uri: this.props.image }}
+                      style={{ width: 400, height: 400, resizeMode: "stretch" }}
+                    />
+                  </TouchableWithoutFeedback>
+                </View>
+              </Modal>
+            </View>
+          </TouchableWithoutFeedback>
         </ReactNativeZoomableView>
         <View
           style={{
@@ -81,4 +122,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { cropImage })(Game);
+export default connect(mapStateToProps, { cropImage,zoomLevel })(Game);

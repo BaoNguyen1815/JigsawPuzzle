@@ -4,6 +4,7 @@ import FlatListPiece from "./FlatListPiece";
 import { connect } from "react-redux";
 
 class PieceList extends Component {
+
   render() {
     return (
       <FlatList

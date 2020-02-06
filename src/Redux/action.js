@@ -68,3 +68,11 @@ export const scrollEnabled = () => {
     type: types.SCROLL_ENABLED
   };
 };
+export const zoomLevel = zoomLevel => {
+  return {
+    type: types.ZOOM_LEVEL,
+    payload: {
+      zoomLevel: zoomLevel
+    }
+  };
+};

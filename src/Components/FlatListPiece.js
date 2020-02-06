@@ -37,37 +37,43 @@ class FlatListPiece extends Component {
     this.view && this.view.setNativeProps(this.customStyle);
   }
   _onPanResponderGrant = (event, gestureState) => {
-    this.customStyle.style.top = gestureState.y0 - event.nativeEvent.locationY;
-    this.customStyle.style.left = gestureState.x0 - event.nativeEvent.locationX;
-    this.updateNativeProps();
+    // this.customStyle.style.top = gestureState.y0 - event.nativeEvent.locationY;
+    // this.customStyle.style.left = gestureState.x0 - event.nativeEvent.locationX;
+    this.props.scrollEnabled();
+
+    // this.updateNativeProps();
+    // console.log(event.nativeEvent.target)
   };
   _onPanResponderMove = (event, gestureState) => {
     this.customStyle.style.top = this.top + gestureState.dy;
     this.customStyle.style.left = this.left + gestureState.dx;
-    this.props.scrollEnabled();
     this.updateNativeProps();
   };
 
   _onPanResponderRelease = (event, gestureState) => {
+    // let tmp = 0;
+    // for (let i = 0; i <= Math.log2(this.props.level); i++) {
+    //   if (i !== 0) {
+    //     tmp = tmp + 1 / i;
+    //   }
+    // }
     if (this.state.isInList && gestureState.dy < -40) {
       this.props.removeImage(
         this.props.index,
-        gestureState.moveX,
-        gestureState.moveY
+        gestureState.moveX - event.nativeEvent.locationX,
+        gestureState.moveY - event.nativeEvent.locationY - 152
       );
       this.props.scrollEnabled();
-      // console.log(event.nativeEvent);
-      console.log(gestureState);
 
       this.setState({
         isInList: false
       });
     }
-    console.log("===================================================");
   };
 
   render() {
-    const parameter = 160 / 2;
+    const displaySize = 2;
+    const parameter = 160 / displaySize;
     const X = 0;
     const Y = 0;
     const t = this.props.top;
@@ -77,9 +83,6 @@ class FlatListPiece extends Component {
 
     return (
       <View
-        // onLayout = {(nativeEvent)=>{
-        //  console.log(nativeEvent)
-        // }}
         {...this.panResponder.panHandlers}
         ref={view => (this.view = view)}
         style={{
@@ -96,13 +99,14 @@ class FlatListPiece extends Component {
             height: parameter
           }}
           position="absolute"
-          viewBox={`${-29 / 2} ${-29 / 2} ${160 / 2} ${parameter}`}
+          viewBox={`${-29 / displaySize} ${-29 / displaySize} ${160 /
+            displaySize} ${parameter}`}
         >
           <Defs>
             <ClipPath id="clip">
               <Path
                 transform={{
-                  scale: `${1 / 2},${1 / 2}`
+                  scale: `${1 / displaySize},${1 / displaySize}`
                 }}
                 stroke="red"
                 strokeOpacity={0}
@@ -128,10 +132,10 @@ class FlatListPiece extends Component {
             </ClipPath>
           </Defs>
           <Image
-            x={0 - 50 * this.props.correctX}
-            y={-0 - 50 * this.props.correctY}
-            width={200 * this.props.level}
-            height={200 * this.props.level}
+            x={0 - (100 * this.props.correctX) / displaySize}
+            y={-0 - (100 * this.props.correctY) / displaySize}
+            width={400*this.props.level/displaySize}
+            height={400*this.props.level/displaySize}
             href={this.props.image}
             clipPath="url(#clip)"
           ></Image>
@@ -140,7 +144,7 @@ class FlatListPiece extends Component {
             fill="none"
             strokeWidth={0.5}
             transform={{
-              scale: `${1 / 2},${1 / 2}`
+              scale: `${1 / displaySize},${1 / displaySize}`
             }}
             d={`M${X} ${Y} L${X + 40} ${Y} C${X - 15 + 40} ${Y - 29 * t}, ${X +
               15 +
